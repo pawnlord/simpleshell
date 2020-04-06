@@ -1,4 +1,4 @@
 #!/bin/bash
 
-gcc shell.c syscalls.c memmanager.c -o whack.o
+gcc src/shell.c src/syscalls.c src/memmanager.c -o simpleshell.o
 

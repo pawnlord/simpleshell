@@ -1,4 +1,4 @@
-#include "syscalls.h"
+#include "../headers/syscalls.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +7,7 @@
 
 char* command_cd = "cd";
 
-int run(char** args, int one_time) {
+int run(char** args, int one_time, volatile int* in_command) {
 	if(one_time) { /* this is one time, do not fork */
 		execvp(args[0], args);
 		return -1;
@@ -37,9 +37,9 @@ int run(char** args, int one_time) {
 		perror("simpleshell: run");
 		exit(EXIT_FAILURE);
 	} else { /* we are parent, wait until child exits */
-		in_command = 1;
+		(*in_command) = 1;
 		wait(NULL);
-		in_command = 0;
+		(*in_command) = 0;
 	}
 	args[end_of_args] = eoasave;
 	return process;

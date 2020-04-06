@@ -3,17 +3,17 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
-#include  <signal.h>
-#include "memmanager.h"
-#include "syscalls.h"
+#include <signal.h>
+#include "../headers/memmanager.h"
+#include "../headers/syscalls.h"
 
-static volatile int running = 1;
+static volatile int* running;
 
-
+static volatile int* in_command;
 
 void  INThandler(int sig) {
-	if(!in_command){
-		running = 0;
+	if(!(*in_command)){
+		*running = 0;
 	}
 }
 
@@ -24,11 +24,17 @@ void start_handler(void (*handler)(int sig), int SIG) {
 
 int main(int argc, char** argv) {
 	char** args;
+	
+	int runningval = 1;
+	int in_commandval = 0;
+	running = &runningval;
+	in_command = &in_commandval;
+	
 	start_handler(INThandler, SIGINT);
 
 	if(argc > 1) {
 		args = argv+1;
-		run(args, 1);
+		run(args, 1, NULL);
 	}
 
 
@@ -36,12 +42,15 @@ int main(int argc, char** argv) {
 	while(running) {
 		clear_args(&args);
 		char* input = malloc(1000);
+		
 		printf("simpleshell: ");
 		fgets(input, 1000, stdin);
 		input[strcspn(input, "\n")] = '\0';
+		
 		int current_arg = 0;
 		int args_char_counter = 0;
 		int i;
+		
 		for(i = 0; input[i] != 0; i++) {
 			if(input[i] == ' ') {
 				current_arg++;
@@ -51,11 +60,13 @@ int main(int argc, char** argv) {
 				args_char_counter++;
 			}
 		}
+		
 		strcpy(args[++current_arg], "");
 		if(strcmp(args[0], "exit") == 0){
 			break;
 		}
-		int d = run(args, 0);
+		int d = run(args, 0, in_command);
+		
 		free(input);
 	}
 }
