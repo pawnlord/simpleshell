@@ -17,9 +17,9 @@ void free_args(char*** args, int s1){
 	}
 	free(*args);
 }
-void clear_args(char*** argsp){
-	for(int i = 0; strcmp((*argsp)[i], ""); i++){
-		for(int j; (*argsp)[i][j] != 0; j++){
+void clear_args(char*** argsp, int s1, int s2){
+	for(int i = 0; i < s1; i++){
+		for(int j = 0; j < s2; j++){
 			(*argsp)[i][j] = 0;	
 		}
 	}

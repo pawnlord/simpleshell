@@ -37,13 +37,15 @@ int main(int argc, char** argv) {
 		run(args, 1, NULL);
 	}
 
-
+	shell_init(1000);
 	init_args(&args, 10, 50);
+	
 	while(running) {
-		clear_args(&args);
+		clear_args(&args, 10, 50);
 		char* input = malloc(1000);
-		
+		printf("HELP\n");
 		printf("simpleshell: ");
+		fflush(stdout);
 		fgets(input, 1000, stdin);
 		input[strcspn(input, "\n")] = '\0';
 		
