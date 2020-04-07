@@ -21,6 +21,7 @@ Not many right now, but there are 2:
 Like all good shells, there's a bit of syntax  
 currently, there's not much but here you go:  
 - **&:** put this at the end and it becomes a background process  
+- **~:** home directory when at start of command or arguement  
 
 ## TODO
 - fix bugs  

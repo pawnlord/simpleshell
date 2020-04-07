@@ -3,13 +3,17 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <pwd.h>
 #include <signal.h>
+
 #include "../headers/memmanager.h"
 #include "../headers/syscalls.h"
 
 static volatile int* running;
 
 static volatile int* in_command;
+
 
 void  INThandler(int sig) {
 	if(!(*in_command)){
@@ -22,6 +26,7 @@ void start_handler(void (*handler)(int sig), int SIG) {
 }
 
 
+
 int main(int argc, char** argv) {
 	char** args;
 	
@@ -30,11 +35,15 @@ int main(int argc, char** argv) {
 	running = &runningval;
 	in_command = &in_commandval;
 	
+	struct passwd *pw = getpwuid(getuid());
+	char* homedir = malloc(100);
+	strcpy(homedir, pw->pw_dir);
+	
 	start_handler(INThandler, SIGINT);
 
 	if(argc > 1) {
 		args = argv+1;
-		run(args, 1, NULL);
+		run(args, 1, NULL, homedir);
 	}
 
 	shell_init(1000);
@@ -43,8 +52,10 @@ int main(int argc, char** argv) {
 	while(running) {
 		clear_args(&args, 10, 50);
 		char* input = malloc(1000);
-		
-		printf("simpleshell: ");
+		char* dir = malloc (100);
+		getcwd(dir, 100);
+		clean_dir(&dir, 100, homedir);
+		printf("(simpleshell):%s$ ", dir);
 		fflush(stdout);
 		fgets(input, 1000, stdin);
 		input[strcspn(input, "\n")] = '\0';
@@ -67,7 +78,7 @@ int main(int argc, char** argv) {
 		if(strcmp(args[0], "exit") == 0){
 			break;
 		}
-		int d = run(args, 0, in_command);
+		int d = run(args, 0, in_command, homedir);
 		
 		free(input);
 	}
