@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 	while(running) {
 		clear_args(&args, 10, 50);
 		char* input = malloc(1000);
-		printf("HELP\n");
+		
 		printf("simpleshell: ");
 		fflush(stdout);
 		fgets(input, 1000, stdin);
