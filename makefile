@@ -1,0 +1,24 @@
+IDIR = headers
+CC=gcc
+
+ODIR=bin
+
+SDIR=src
+
+_DEPS = syscalls.h memmanager.h 
+DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+
+_OBJ = shell.o syscalls.o memmanager.o 
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+
+$(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
+	$(CC) -c -o $@ $< 
+
+simpleshell: $(OBJ)
+	$(CC) -o $@ $^ 
+
+.PHONY: clean
+
+clean:
+	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ 

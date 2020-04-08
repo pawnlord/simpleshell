@@ -2,7 +2,12 @@
 A very very simple C shell for Linux.  
 
 ## building
-Just use the build script through `. build.sh` or `source build.sh`,  
+You can use the build script through `. build.sh` or `source build.sh`,  
+If you are a make type of guy or not on bash, use the makefile like  
+```
+mkdir bin
+make
+```
 
 ## usage
 ```shell
