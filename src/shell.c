@@ -10,6 +10,9 @@
 #include "../headers/memmanager.h"
 #include "../headers/syscalls.h"
 
+#define BIG_STR_SIZE 1000
+#define SMALL_STR_SIZE 100
+
 static volatile int* running;
 
 static volatile int* in_command;
@@ -36,9 +39,10 @@ int main(int argc, char** argv) {
 	in_command = &in_commandval;
 	
 	struct passwd *pw = getpwuid(getuid());
-	char* homedir = malloc(100);
+	char* homedir = malloc(SMALL_STR_SIZE);
 	strcpy(homedir, pw->pw_dir);
 	
+	char* usrname = pw->pw_name;
 	start_handler(INThandler, SIGINT);
 
 	if(argc > 1) {
@@ -46,18 +50,18 @@ int main(int argc, char** argv) {
 		run(args, 1, NULL, homedir);
 	}
 
-	shell_init(1000);
-	init_args(&args, 10, 50);
+	shell_init(DEFAULT_MAX_PROCESSES);
+	init_args(&args, MAX_ARGS, MAX_ARG_SIZE);
 	
 	while(running) {
-		clear_args(&args, 10, 50);
-		char* input = malloc(1000);
-		char* dir = malloc (100);
-		getcwd(dir, 100);
-		clean_dir(&dir, 100, homedir);
-		printf("(simpleshell):%s$ ", dir);
+		clear_args(&args, MAX_ARGS, MAX_ARG_SIZE);
+		char* input = malloc(BIG_STR_SIZE);
+		char* dir = malloc (SMALL_STR_SIZE);
+		getcwd(dir, SMALL_STR_SIZE);
+		clean_dir(&dir, SMALL_STR_SIZE, homedir);
+		printf("[simpleshell]%s:%s$ ", usrname, dir);
 		fflush(stdout);
-		fgets(input, 1000, stdin);
+		fgets(input, BIG_STR_SIZE, stdin);
 		input[strcspn(input, "\n")] = '\0';
 		
 		int current_arg = 0;

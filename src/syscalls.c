@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+
 char* command_cd = "cd";
 char* command_listproc = "listprocesses";
 
@@ -92,8 +93,15 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
 			}
 		}
 	}
+	
+	
+	if(end_of_args == 0){
+		return 0;
+	}
+	
 	char* eoasave = args[end_of_args];
 	args[end_of_args] = NULL;
+	
 	
 	if(strcmp(args[0], command_cd) == 0){
 		change_dir(args+1);

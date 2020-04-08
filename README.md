@@ -29,5 +29,10 @@ currently, there's not much but here you go:
 - **~:** home directory when at start of command or arguement  
 
 ## TODO
-- fix bugs  
-	- seg faults
+- more syntax (based on bash)  
+- more information (host name)  
+- login to different users on startup  
+- far in the future goals:  
+	- scripts  
+	- startup scripts  
+	- autocomplete  

@@ -1,5 +1,10 @@
 #ifndef SYSCALL_H
 #define SYSCALL_H
+
+#define MAX_ARGS 10
+#define MAX_ARG_SIZE 50
+#define DEFAULT_MAX_PROCESSES 1000
+
 int shell_init(int proc_num);
 
 int clean_dir(char** dir, int len, char* home_dir);
