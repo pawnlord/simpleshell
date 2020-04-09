@@ -13,14 +13,14 @@
 #define BIG_STR_SIZE 1000
 #define SMALL_STR_SIZE 100
 
-static volatile int* running;
+static volatile int* sigint_flag;
 
 static volatile int* in_command;
 
 
 void  INThandler(int sig) {
 	if(!(*in_command)){
-		*running = 0;
+		*sigint_flag = 0;
 	}
 }
 
@@ -33,9 +33,9 @@ void start_handler(void (*handler)(int sig), int SIG) {
 int main(int argc, char** argv) {
 	char** args;
 	
-	int runningval = 1;
+	int sigint_flagval = 1;
 	int in_commandval = 0;
-	running = &runningval;
+	sigint_flag = &sigint_flagval;
 	in_command = &in_commandval;
 	
 	struct passwd *pw = getpwuid(getuid());
@@ -53,13 +53,13 @@ int main(int argc, char** argv) {
 	shell_init(DEFAULT_MAX_PROCESSES);
 	init_args(&args, MAX_ARGS, MAX_ARG_SIZE);
 	
-	while(running) {
+	while(1) {
 		clear_args(&args, MAX_ARGS, MAX_ARG_SIZE);
 		char* input = malloc(BIG_STR_SIZE);
 		char* dir = malloc (SMALL_STR_SIZE);
 		getcwd(dir, SMALL_STR_SIZE);
 		clean_dir(&dir, SMALL_STR_SIZE, homedir);
-		printf("[simpleshell]%s:%s$ ", usrname, dir);
+		printf("\033[92m[simpleshell]\033[93m%s:\033[91m%s\033[0m$ ", usrname, dir);
 		fflush(stdout);
 		fgets(input, BIG_STR_SIZE, stdin);
 		input[strcspn(input, "\n")] = '\0';

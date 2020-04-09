@@ -8,9 +8,12 @@
 char* command_cd = "cd";
 char* command_listproc = "listprocesses";
 
+char* help_file;
+
 char hd_char = '~';
 
 int*   processes;
+char** proc_names;
 int    process_num = 1;
 char   started = 0;
 
@@ -19,7 +22,15 @@ int shell_init(int proc_num) {
 	for(int i = 0; i < proc_num; i++){
 		processes[i] = -1; /* signifies end of list */
 	}
+	proc_names = malloc(sizeof(char*)*proc_num);
+	for(int i = 0; i < proc_num; i++){
+		proc_names[i] = malloc((MAX_ARG_SIZE+1)*MAX_ARGS); 
+		for(int j = 0; j < (MAX_ARG_SIZE+1)*MAX_ARGS; j++){
+			proc_names[i][j] = 0;
+		}
+	}
 	processes[0] = getpid();
+	proc_names[0] = "simpleshell (this)";
 	started = 1;
 }
 
@@ -126,7 +137,7 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
 		int succ = execvp(args[0], args);
 		if(succ < 0){
 			char* message = malloc(100);
-			sprintf(message, "simpleshell: %s", args[0]);
+			sprintf(message, "\033[92msimpleshell:\033[0m \033[94m%s\033[0m", args[0]);
 			perror(message);
 			fflush(stdout);
 			fflush(stderr);
@@ -149,6 +160,13 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
 			printf("new process id: %d\n", process);
 			if(started == 1){
 				processes[process_num] = process;
+				char* process_name = malloc((MAX_ARG_SIZE+1)*MAX_ARGS);
+				strcpy(process_name, args[0]);
+				for(int i = 1; args[i] != NULL; i++){
+					strcat(process_name, " ");
+					strcat(process_name, args[i]);
+				}
+				strcpy(proc_names[process_num], process_name);
 				process_num++;
 			}
 			is_bgprocess = 0;
@@ -168,6 +186,6 @@ int listproc(char** args){
 	int i = 0;
 	/* do checks for params here */
 	for(i = 0; processes[i] != -1; i++){
-		printf("[%d]\n", processes[i]);
+		printf("\033[94m[%d]\033[0m %s\n", processes[i], proc_names[i]);
 	}
 }
