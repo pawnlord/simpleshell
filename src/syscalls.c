@@ -7,6 +7,7 @@
 
 char* command_cd = "cd";
 char* command_listproc = "listprocesses";
+char* command_help = "help";
 
 char* help_file;
 
@@ -32,6 +33,17 @@ int shell_init(int proc_num) {
 	processes[0] = getpid();
 	proc_names[0] = "simpleshell (this)";
 	started = 1;
+	help_file = malloc(1000);
+	strcpy(help_file, "\
+\033[91mWelcome to \033[96msimpleshell\033[91m!\033[0m\n\
+This is a shell made for fun and for the sake of trying to replicate other shell features\n\
+if you where expecting a serious shell, well too bad!\n\
+\033[91musage:\n\
+\033[94msimpleshell \033[96m[<command...>]\033[0m\n\
+\033[91mbuiltin commands:\n\
+- \033[94mhelp:\033[0m get help on general usage and commands\n\
+- \033[94mcd\033[0m \033[96m<directory>\033[0m: change working directory to <directory>\n\
+- \033[94mlistprocesses\033[0m: list all processes spun by this current shell\n");
 }
 
 int clean_dir(char** dir, int len, char* home_dir){
@@ -124,6 +136,11 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
 		args[end_of_args] = eoasave;
 		return 0;
 	}
+	if(strcmp(args[0], command_help) == 0 && started == 1){
+		help(args+1);
+		args[end_of_args] = eoasave;
+		return 0;
+	}
 	
 	if(one_time) { /* this is one time, do not fork */
 		execvp(args[0], args);
@@ -188,4 +205,10 @@ int listproc(char** args){
 	for(i = 0; processes[i] != -1; i++){
 		printf("\033[94m[%d]\033[0m %s\n", processes[i], proc_names[i]);
 	}
+}
+
+int help(char** args){
+	int i = 0;
+	/* do checks for params here */
+	printf("%s\n", help_file);
 }
