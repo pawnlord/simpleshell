@@ -5,10 +5,10 @@ ODIR=bin
 
 SDIR=src
 
-_DEPS = syscalls.h memmanager.h 
+_DEPS = syscalls.h memmanager.h termfuncs.h 
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = shell.o syscalls.o memmanager.o 
+_OBJ = shell.o syscalls.o memmanager.o termfuncs.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

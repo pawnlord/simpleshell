@@ -30,7 +30,6 @@ currently, there's not much but here you go:
 
 ## TODO
 - more syntax (based on bash)  
-- more information (host name)  
 - login to different users on startup  
 - far in the future goals:  
 	- scripts  
