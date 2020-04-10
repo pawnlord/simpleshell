@@ -127,6 +127,13 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
 	
 	
 	if(strcmp(args[0], command_cd) == 0){
+		if(args[1] == NULL && end_of_args==1){
+			args[end_of_args] = eoasave;
+			end_of_args+=1;
+			eoasave = args[end_of_args];
+			args[end_of_args] = NULL;
+			strcpy(args[1], home_dir);
+		}
 		change_dir(args+1);
 		args[end_of_args] = eoasave;
 		return 0;
@@ -196,6 +203,7 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
 int change_dir(char** args){
 	int i = 0;
 	/* do checks for params here */
+	
 	chdir(args[i]);
 }
 
