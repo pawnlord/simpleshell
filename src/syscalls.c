@@ -40,10 +40,15 @@ This is a shell made for fun and for the sake of trying to replicate other shell
 if you where expecting a serious shell, well too bad!\n\
 \033[91musage:\n\
 \033[94msimpleshell \033[96m[<command...>]\033[0m\n\
-\033[91mbuiltin commands:\n\
-- \033[94mhelp:\033[0m get help on general usage and commands\n\
+\033[91mbuiltin commands:\033[0m\n\
+- \033[94mhelp\033[0m: get help on general usage and commands\n\
 - \033[94mcd\033[0m \033[96m<directory>\033[0m: change working directory to <directory>. \n\tIf <directory> is left blank, it will go to your home directory\n\
-- \033[94mlistprocesses\033[0m: list all processes spun by this current shell\n");
+- \033[94mlistprocesses\033[0m: list all processes spun by this current shell\n\
+\033[91msyntax:\033[0m\n\
+- \033[94m&\033[0m: when put as the last arguement, commands preceeding it are ran as background processes.\n\
+- \033[94m#\033[0m: stops arguement reading. is a comment.\n\
+- \033[94m\\\033[0m: escapes next character if the character is a syntax character.\n");
+
 }
 
 int clean_dir(char** dir, int len, char* home_dir){

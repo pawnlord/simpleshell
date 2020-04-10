@@ -23,7 +23,6 @@ void  INThandler(int sig) {
 	if(!(*in_command)){
 		*sigint_flag = 0;
 	}
-	printf("CAUGHT FLAG");
 }
 
 void start_handler(void (*handler)(int sig), int SIG) {
@@ -91,17 +90,20 @@ int main(int argc, char** argv) {
 		int current_arg = 0;
 		int args_char_counter = 0;
 		int i;
-		
-		for(i = 0; input[i] != 0; i++) {
+		int escaped = 0;
+		for(i = 0; input[i] != 0 && !(!escaped && input[i] == '#'); i++) {
 			if(input[i] == ' ') {
 				current_arg++;
 				args_char_counter = 0;
+				escaped = 0;
+			} else if(input[i] == '\\' && !escaped){
+				escaped = 1;
 			} else {
 				args[current_arg][args_char_counter] = input[i];
 				args_char_counter++;
+				escaped = 0;
 			}
 		}
-		
 		strcpy(args[++current_arg], "");
 		if(strcmp(args[0], "exit") == 0){
 			break;
