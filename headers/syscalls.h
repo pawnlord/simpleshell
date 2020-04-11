@@ -5,11 +5,17 @@
 #define MAX_ARG_SIZE 50
 #define DEFAULT_MAX_PROCESSES 1000
 
+/* Flags for better processing */
+#define BGP_FLAG 0
+
+
 int shell_init(int proc_num);
 
 int clean_dir(char** dir, int len, char* home_dir);
 
-int run(char** args, int one_time, volatile int* in_command, char* home_dir);
+int unclean_dir(char** dir, int len, char* home_dir);
+
+int run(char** args, int one_time, volatile int* in_command, char* home_dir, char* flags);
 
 int change_dir(char** args);
 

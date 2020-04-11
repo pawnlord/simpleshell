@@ -106,20 +106,13 @@ int unclean_dir(char** dir, int len, char* home_dir){
 	return 0;
 }
 
-int run(char** args, int one_time, volatile int* in_command, char* home_dir) {
+int run(char** args, int one_time, volatile int* in_command, char* home_dir, char* flags) {
 	
 	/* find end */
-	int is_bgprocess = 0;
+	int is_bgprocess = flags[BGP_FLAG];
 	int end_of_args;
 	for(end_of_args = 0; strcmp(args[end_of_args], ""); end_of_args++){
 		unclean_dir(args+end_of_args, 50, home_dir);
-		if(end_of_args != 0){
-			if(strcmp(args[end_of_args], "&") == 0 &&
-				strcmp(args[end_of_args+1], "") == 0){
-				is_bgprocess = 1;
-				break;			
-			}
-		}
 	}
 	
 	

@@ -67,16 +67,23 @@ int main(int argc, char** argv) {
 	
 	if(argc > 1) {
 		args = argv+1;
-		run(args, 1, NULL, homedir);
+		run(args, 1, NULL, homedir, NULL);
 	}
-
+	
 	shell_init(DEFAULT_MAX_PROCESSES);
 	init_args(&args, MAX_ARGS, MAX_ARG_SIZE);
-	
+	char* flags = malloc(SMALL_STR_SIZE);
+	for(int i = 0; i < SMALL_STR_SIZE; i++){
+		flags[i] = 0;
+	}
+	for(int i = 0; i < SMALL_STR_SIZE; i++){
+		flags[i] = 0;
+	}
 	while(1) {
 		clear_args(&args, MAX_ARGS, MAX_ARG_SIZE);
 		char* input = malloc(BIG_STR_SIZE);
-		for(int i = 0; i < BIG_STR_SIZE; i++){
+		int i;
+		for(i = 0; i < BIG_STR_SIZE; i++){
 			input[i] = 0;
 		}
 		char* dir = malloc (SMALL_STR_SIZE);
@@ -89,7 +96,6 @@ int main(int argc, char** argv) {
 		
 		int current_arg = 0;
 		int args_char_counter = 0;
-		int i;
 		int escaped = 0;
 		for(i = 0; input[i] != 0 && !(!escaped && input[i] == '#'); i++) {
 			if(input[i] == ' ') {
@@ -98,7 +104,13 @@ int main(int argc, char** argv) {
 				escaped = 0;
 			} else if(input[i] == '\\' && !escaped){
 				escaped = 1;
+				flags[BGP_FLAG] = 0;
+			} else if(input[i] == '&' && !escaped){
+				flags[BGP_FLAG] = 1;
+				escaped = 0;
 			} else {
+				
+				flags[BGP_FLAG] = 0;
 				args[current_arg][args_char_counter] = input[i];
 				args_char_counter++;
 				escaped = 0;
@@ -108,7 +120,7 @@ int main(int argc, char** argv) {
 		if(strcmp(args[0], "exit") == 0){
 			break;
 		}
-		int d = run(args, 0, in_command, homedir);
+		int d = run(args, 0, in_command, homedir, flags);
 		*sigint_flag = 1;
 		free(input);
 	}
