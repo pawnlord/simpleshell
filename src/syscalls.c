@@ -5,20 +5,27 @@
 #include <string.h>
 #include <sys/wait.h>
 
+/* builtin commands */
 char* command_cd = "cd";
 char* command_listproc = "listprocesses";
 char* command_help = "help";
 
+/* text to print for help command */
 char* help_file;
 
+/* character that reperesents the home directory */
 char hd_char = '~';
 
+/* lists of processes made by this program */
 int*   processes;
 char** proc_names;
+/* current process */
 int    process_num = 1;
+/* tells us whether shell_init has been called */
 char   started = 0;
 
 int shell_init(int proc_num) {
+	/* allocate and clear some arrays */
 	processes = malloc(proc_num*sizeof(int));
 	for(int i = 0; i < proc_num; i++){
 		processes[i] = -1; /* signifies end of list */
@@ -30,9 +37,14 @@ int shell_init(int proc_num) {
 			proc_names[i][j] = 0;
 		}
 	}
+	
+	/* put our PID and name first in lists */
 	processes[0] = getpid();
 	proc_names[0] = "simpleshell (this)";
+	/* set started to true */
 	started = 1;
+	
+	/* initialize help text */
 	help_file = malloc(1000);
 	strcpy(help_file, "\
 \033[91mWelcome to \033[96msimpleshell\033[91m!\033[0m\n\
@@ -51,6 +63,7 @@ if you where expecting a serious shell, well too bad!\n\
 
 }
 
+/* make dir with home directory replaced with ~ */
 int clean_dir(char** dir, int len, char* home_dir){
 	int diff = 0;
 	int i;
@@ -82,6 +95,8 @@ int clean_dir(char** dir, int len, char* home_dir){
 		
 	}
 }
+
+/* replace ~ with home directory */
 int unclean_dir(char** dir, int len, char* home_dir){
 	if((*dir)!=NULL){
 		if((*dir)[0] == hd_char){
@@ -106,6 +121,7 @@ int unclean_dir(char** dir, int len, char* home_dir){
 	return 0;
 }
 
+/* run commands */
 int run(char** args, int one_time, volatile int* in_command, char* home_dir, char* flags) {
 	
 	/* find end */
@@ -115,16 +131,18 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir, cha
 		unclean_dir(args+end_of_args, 50, home_dir);
 	}
 	
-	
+	/* if there is nothing, return */
 	if(end_of_args == 0){
 		return 0;
 	}
 	
+	/* set the end to NULL, but save original position */
 	char* eoasave = args[end_of_args];
 	args[end_of_args] = NULL;
 	
-	
+	/* if it cd, we know to use change_dir */
 	if(strcmp(args[0], command_cd) == 0){
+		/* default to the home directory */
 		if(args[1] == NULL && end_of_args==1){
 			args[end_of_args] = eoasave;
 			end_of_args+=1;
@@ -136,27 +154,33 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir, cha
 		args[end_of_args] = eoasave;
 		return 0;
 	}
+	/* listprocesses lists all processes made by the shell, with names */
 	if(strcmp(args[0], command_listproc) == 0 && started == 1){
 		listproc(args+1);
 		args[end_of_args] = eoasave;
 		return 0;
 	}
+	/* list help for commands */
 	if(strcmp(args[0], command_help) == 0 && started == 1){
 		help(args+1);
 		args[end_of_args] = eoasave;
 		return 0;
 	}
 	
+	/* if its a one time, do it one time */
 	if(one_time) { /* this is one time, do not fork */
 		execvp(args[0], args);
 		return -1;
 	} 
 	
-	
+	/* fork a child process to be swiftly killed */
 	int process = fork();
 	if(process == 0) {	/* we are child process */
+		
 		int process_index = process_num;
+		/* execute command */
 		int succ = execvp(args[0], args);
+		/* if there was an error, print it */
 		if(succ < 0){
 			char* message = malloc(100);
 			sprintf(message, "\033[92msimpleshell:\033[0m \033[94m%s\033[0m", args[0]);
@@ -165,21 +189,26 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir, cha
 			fflush(stderr);
 			free(message);
 		}
+		/* if this was a background process, tell us it was killed */
 		if(is_bgprocess){
 			printf("\nsimpleshell: process %d killed\n", processes[process_index]);
 			processes[process_index] = -2;
 		}
+		/* exit */
 		exit(0);
 	} else if (process < 0) { /* we failed, exit */
 		perror("simpleshell: run");
 		exit(EXIT_FAILURE);
 	} else { /* we are parent, wait until child exits */
-		if(!is_bgprocess){
+		if(!is_bgprocess){ 
+			/* wait for command to end */
 			(*in_command) = 1;
 			waitpid(process, NULL, 0);
 			(*in_command) = 0;
-		} else {
+		} else {  /* we don't have to wait if we are a background process */
+			/* tells us the process id */
 			printf("new process id: %d\n", process);
+			/* if we used shell_init, save the process to the lists */
 			if(started == 1){
 				processes[process_num] = process;
 				char* process_name = malloc((MAX_ARG_SIZE+1)*MAX_ARGS);
@@ -191,13 +220,16 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir, cha
 				strcpy(proc_names[process_num], process_name);
 				process_num++;
 			}
+			/* reset is_bgprocess */
 			is_bgprocess = 0;
 		}
 	}
+	/* take the null arg and return it to the correct pointer */
 	args[end_of_args] = eoasave;
 	return process;
 }
 
+/* a syscall, we might want to do some creative stuff here */
 int change_dir(char** args){
 	int i = 0;
 	/* do checks for params here */
@@ -205,6 +237,7 @@ int change_dir(char** args){
 	chdir(args[i]);
 }
 
+/* list processes started by this */
 int listproc(char** args){
 	int i = 0;
 	/* do checks for params here */
@@ -213,6 +246,7 @@ int listproc(char** args){
 	}
 }
 
+/* display help */
 int help(char** args){
 	int i = 0;
 	/* do checks for params here */
