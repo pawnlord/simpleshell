@@ -11,6 +11,8 @@
 #include <syscalls.h>
 #include <termfuncs.h>
 
+#include <config_reader.h>
+
 /* general size for strings */
 #define BIG_STR_SIZE 1000
 #define SMALL_STR_SIZE 100
@@ -55,6 +57,8 @@ int flaggedreadin(char* buff, volatile int* flag, char eol) {
 }
 
 int main(int argc, char** argv) {
+	config cfg;
+	
 	/* arguements we pass to the run function*/
 	char** args;
 	
