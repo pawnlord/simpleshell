@@ -1,5 +1,6 @@
-#include "../headers/syscalls.h"
-#include "../headers/termfuncs.h"
+#include <syscalls.h>
+#include <termfuncs.h>
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

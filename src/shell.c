@@ -7,9 +7,9 @@
 #include <pwd.h>
 #include <signal.h>
 
-#include "../headers/memmanager.h"
-#include "../headers/syscalls.h"
-#include "../headers/termfuncs.h"
+#include <memmanager.h>
+#include <syscalls.h>
+#include <termfuncs.h>
 
 /* general size for strings */
 #define BIG_STR_SIZE 1000

@@ -1,4 +1,4 @@
-#include "../headers/memmanager.h"
+#include <memmanager.h>
 #include <stdlib.h>
 #include <string.h>
 

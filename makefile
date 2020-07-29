@@ -1,4 +1,4 @@
-IDIR = headers
+IDIR = inc
 CC=gcc
 
 ODIR=bin
@@ -13,7 +13,7 @@ OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
-	$(CC) -c -o $@ $< 
+	$(CC) -c -o $@ $< -I$(IDIR)
 
 simpleshell: $(OBJ)
 	$(CC) -o $@ $^ 
