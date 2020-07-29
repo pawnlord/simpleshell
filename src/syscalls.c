@@ -1,4 +1,5 @@
 #include "../headers/syscalls.h"
+#include "../headers/termfuncs.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +10,7 @@
 char* command_cd = "cd";
 char* command_listproc = "listprocesses";
 char* command_help = "help";
+char* command_clear = "clear";
 
 /* text to print for help command */
 char* help_file;
@@ -167,6 +169,12 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir, cha
 		return 0;
 	}
 	
+	/* clear terminal */
+	if(strcmp(args[0], command_clear) == 0 && started == 1){
+		clear();
+		args[end_of_args] = eoasave;
+		return 0;
+	}
 	/* if its a one time, do it one time */
 	if(one_time) { /* this is one time, do not fork */
 		execvp(args[0], args);

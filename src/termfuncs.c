@@ -1,7 +1,6 @@
 #include <termios.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <stropts.h>
 #include <sys/select.h>
 #include <sys/ioctl.h>
 static struct termios old, new;
