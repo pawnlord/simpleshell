@@ -171,4 +171,5 @@ int main(int argc, char** argv) {
 		*sigint_flag = 0;
 		free(input);
 	}
+	clean_settings(&s);
 }

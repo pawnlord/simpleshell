@@ -1,5 +1,5 @@
 #include <settingmanager.h>
-#define NUMBEROFCOLORS 3
+#define NUMBEROFCOLORS 5
 
 int color_map(char* color_name, char* color_code);
 
@@ -34,7 +34,15 @@ int start_settings(settings* s, char* filename){
 	s->important_clr = malloc(30);
 	color_map(val[0], s->important_clr);
 	
-	printf("%simportant, %sgeneral, %s default\n", s->important_clr, s->general_clr, s->default_clr);
+	get_last_attr(cfg, field, "NAME", val);
+	s->name_clr = malloc(30);
+	color_map(val[0], s->name_clr);
+	
+	get_last_attr(cfg, field, "DIRECTORY", val);
+	s->directory_clr = malloc(30);
+	color_map(val[0], s->directory_clr);
+	
+	//printf("%simportant, %sgeneral, %s default\n", s->important_clr, s->general_clr, s->default_clr);
 	for(int i = 0; i < 10; i++){
 		free(val[i]);
 	}
@@ -46,8 +54,8 @@ int start_settings(settings* s, char* filename){
 	return 1;
 }
 
-char color_map_colors[NUMBEROFCOLORS][20] =     {"CLEAR\0",   "LIGHT_GREEN\0", "LIGHT_CYAN\0"};
-char color_map_chars[NUMBEROFCOLORS][10] =      {"\033[0m\0", "\033[92m\0",    "\033[96m\0"};
+char color_map_colors[NUMBEROFCOLORS][20] =     {"CLEAR\0",   "LIGHT_GREEN\0", "LIGHT_CYAN\0", "RED\0",      "LIGHT_YELLOW", };
+char color_map_chars[NUMBEROFCOLORS][10] =      {"\033[0m\0", "\033[92m\0",    "\033[96m\0",   "\033[31m\0", "\033[93m\0", };
 
 int color_map(char* color_name, char* color_code){
 	for(int i = 0; i < NUMBEROFCOLORS; i++){
@@ -57,4 +65,12 @@ int color_map(char* color_name, char* color_code){
 		}
 	}
 	return 0;
+}
+
+int clean_settings(settings* s){
+	free(s->directory_clr);
+	free(s->name_clr);
+	free(s->important_clr);
+	free(s->general_clr);
+	free(s->default_clr);
 }

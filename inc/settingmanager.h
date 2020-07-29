@@ -19,4 +19,6 @@ typedef struct{
 
 int start_settings(settings* s, char* filename); 
 
+int clean_settings(settings* s); 
+
 #endif
