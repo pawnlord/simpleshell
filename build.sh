@@ -1,4 +1,6 @@
 #!/bin/bash
 
-gcc src/* -o simpleshell.o -Iinc -Llib -lconfigreader
+gcc src/* -o simpleshell -Iinc -Llib -lconfigreader
+
+cp -i config/default.cfg $HOME/.config/simpleshell.cfg
 

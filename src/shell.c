@@ -57,8 +57,6 @@ int flaggedreadin(char* buff, volatile int* flag, char eol) {
 }
 
 int main(int argc, char** argv) {
-	settings s;
-	start_settings(&s, "config/default.cfg");
 	/* arguements we pass to the run function*/
 	char** args;
 	
@@ -76,6 +74,23 @@ int main(int argc, char** argv) {
 	/* get home directory*/
 	char* homedir = malloc(SMALL_STR_SIZE);
 	strcpy(homedir, pw->pw_dir);
+	char* cfg_homedir;
+	if((cfg_homedir = getenv("XDG_CONFIG_HOME")) == NULL){
+		cfg_homedir = malloc(100);
+		for(int i = 0; i < 100; i++){
+			cfg_homedir[i] = 0;
+		}
+		if(getenv("HOME")==NULL){
+			strcat(strcat(cfg_homedir, homedir), "/.config");	
+		} else{
+			printf("HOME FOUND\n");
+			strcat(strcat(cfg_homedir, getenv("HOME")), "/.config");
+		}
+	} 
+	
+	settings s;
+	start_settings(&s, strcat(cfg_homedir, "/simpleshell.cfg"));
+	
 	
 	/* get the current username */
 	char* usrname = pw->pw_name;
