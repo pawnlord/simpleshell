@@ -1,5 +1,5 @@
 #include <settingmanager.h>
-#define NUMBEROFCOLORS 6
+#define NUMBEROFCOLORS 11
 
 int color_map(char* color_name, char* color_code);
 
@@ -58,8 +58,8 @@ int start_settings(settings* s, char* filename){
 	return 1;
 }
 
-char color_map_colors[NUMBEROFCOLORS][20] =     {"CLEAR\0",   "LIGHT_GREEN\0", "LIGHT_CYAN\0", "RED\0",      "LIGHT_YELLOW", "LIGHT_RED"};
-char color_map_chars[NUMBEROFCOLORS][10] =      {"\033[0m\0", "\033[92m\0",    "\033[96m\0",   "\033[31m\0", "\033[93m\0",   "\033[91m\0"};
+char color_map_colors[NUMBEROFCOLORS][20] =     {"CLEAR\0",   "BRIGHT_GREEN\0", "BRIGHT_CYAN\0", "BRIGHT_YELLOW", "BRIGHT_BLUE",  "BRIGHT_RED", "RED\0",      "BLUE",       "GREEN",      "YELLOW",      "CYAN"};
+char color_map_chars[NUMBEROFCOLORS][10] =      {"\033[0m\0", "\033[92m\0",     "\033[96m\0",    "\033[93m\0",    "\033[94m\0",   "\033[91m\0", "\033[31m\0", "\033[34m\0", "\033[32m\0", "\033[33m\0", "\033[36m\0"};
 
 int color_map(char* color_name, char* color_code){
 	for(int i = 0; i < NUMBEROFCOLORS; i++){
