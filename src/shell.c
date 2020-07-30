@@ -87,11 +87,11 @@ int main(int argc, char** argv) {
 		run(args, 1, NULL, homedir, NULL);
 	}
 	/* a welcoming */
-	printf("\033[92mWelcome to \033[96msimpleshell\033[92m!\n");
-	printf("Type \033[96mhelp\033[92m for commands\n");
+	printf("%sWelcome to %ssimpleshell%s!\n", s.general_clr, s.important_clr, s.general_clr);
+	printf("Type %shelp%s for commands\n", s.important_clr, s.general_clr);
 	
 	/* initialize shell arrays */
-	shell_init(DEFAULT_MAX_PROCESSES);
+	shell_init(DEFAULT_MAX_PROCESSES, &s);
 	/* allocate args */
 	init_args(&args, MAX_ARGS, MAX_ARG_SIZE);
 	/* setup flags*/
@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
 		/* clean dir, set all homedirs to ~s*/
 		clean_dir(&dir, SMALL_STR_SIZE, homedir);
 		/* print prompt "[simpleshell]username:directory$" */
-		printf("\033[92m[simpleshell]\033[93m%s:\033[91m%s\033[0m$ ", usrname, dir);
+		printf("%s[simpleshell]%s%s:%s%s%s$ ", s.general_clr, s.name_clr, usrname,s.directory_clr, dir, s.default_clr);
 		fflush(stdout);
 		/* readin using special function */
 		flaggedreadin(input, sigint_flag, '\n');

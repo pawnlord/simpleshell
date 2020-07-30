@@ -14,7 +14,8 @@ typedef struct{
 	char* name_clr;
 	char* important_clr;
 	char* default_clr;
-
+	char* argument_clr;
+	
 } settings;
 
 int start_settings(settings* s, char* filename); 

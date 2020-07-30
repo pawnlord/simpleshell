@@ -8,8 +8,9 @@
 /* Flags for better processing */
 #define BGP_FLAG 0
 
+#include <settingmanager.h>
 
-int shell_init(int proc_num);
+int shell_init(int proc_num, settings* s_);
 
 int clean_dir(char** dir, int len, char* home_dir);
 

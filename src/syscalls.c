@@ -28,7 +28,10 @@ int    process_num = 1;
 /* tells us whether shell_init has been called */
 char   started = 0;
 
-int shell_init(int proc_num) {
+settings* s;
+
+int shell_init(int proc_num, settings* s_) {
+	s = s_;
 	/* allocate and clear some arrays */
 	processes = malloc(proc_num*sizeof(int));
 	for(int i = 0; i < proc_num; i++){
@@ -50,20 +53,31 @@ int shell_init(int proc_num) {
 	
 	/* initialize help text */
 	help_file = malloc(1000);
-	strcpy(help_file, "\
-\033[91mWelcome to \033[96msimpleshell\033[91m!\033[0m\n\
+	sprintf(help_file, "\
+%sWelcome to %ssimpleshell%s!\n\
 This is a shell made for fun and for the sake of trying to replicate other shell features\n\
 if you where expecting a serious shell, well too bad!\n\
-\033[91musage:\n\
-\033[94msimpleshell \033[96m[<command...>]\033[0m\n\
-\033[91mbuiltin commands:\033[0m\n\
-- \033[94mhelp\033[0m: get help on general usage and commands\n\
-- \033[94mcd\033[0m \033[96m<directory>\033[0m: change working directory to <directory>. \n\tIf <directory> is left blank, it will go to your home directory\n\
-- \033[94mlistprocesses\033[0m: list all processes spun by this current shell\n\
-\033[91msyntax:\033[0m\n\
-- \033[94m&\033[0m: when put as the last arguement, commands preceeding it are ran as background processes.\n\
-- \033[94m#\033[0m: stops arguement reading. is a comment.\n\
-- \033[94m\\\033[0m: escapes next character if the character is a syntax character.\n");
+%susage:\n\
+%ssimpleshell %s[<command...>]%s\n\
+%sbuiltin commands:%s\n\
+- %shelp%s: get help on general usage and commands\n\
+- %scd %s<directory>%s: change working directory to <directory>. \n\tIf <directory> is left blank, it will go to your home directory\n\
+- %slistprocesses%s: list all processes spun by this current shell\n\
+%ssyntax:%s\n\
+- %s&%s: when put as the last arguement, commands preceeding it are ran as background processes.\n\
+- %s#%s: stops arguement reading. is a comment.\n\
+- %s\\%s: escapes next character if the character is a syntax character.\n", s->general_clr, s->important_clr, s->default_clr,
+s->important_clr,
+s->directory_clr, s->argument_clr, s->default_clr,
+s->important_clr, s->default_clr,
+s->directory_clr, s->default_clr,
+s->directory_clr, s->argument_clr, s->default_clr,
+s->directory_clr, s->default_clr,
+s->important_clr, s->default_clr,
+s->directory_clr, s->default_clr,
+s->directory_clr, s->default_clr,
+s->directory_clr, s->default_clr
+);
 
 }
 
