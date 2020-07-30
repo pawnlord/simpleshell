@@ -83,7 +83,6 @@ int main(int argc, char** argv) {
 		if(getenv("HOME")==NULL){
 			strcat(strcat(cfg_homedir, homedir), "/.config");	
 		} else{
-			printf("HOME FOUND\n");
 			strcat(strcat(cfg_homedir, getenv("HOME")), "/.config");
 		}
 	} 

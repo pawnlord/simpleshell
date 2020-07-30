@@ -56,7 +56,7 @@ int shell_init(int proc_num, settings* s_) {
 	sprintf(help_file, "\
 %sWelcome to %ssimpleshell%s!\n\
 This is a shell made for fun and for the sake of trying to replicate other shell features\n\
-if you where expecting a serious shell, well too bad!\n\
+if you where expecting a serious, well-made shell, too bad!\n\
 %susage:\n\
 %ssimpleshell %s[<command...>]%s\n\
 %sbuiltin commands:%s\n\
@@ -66,7 +66,7 @@ if you where expecting a serious shell, well too bad!\n\
 %ssyntax:%s\n\
 - %s&%s: when put as the last arguement, commands preceeding it are ran as background processes.\n\
 - %s#%s: stops arguement reading. is a comment.\n\
-- %s\\%s: escapes next character if the character is a syntax character.\n", s->general_clr, s->important_clr, s->default_clr,
+- %s\\%s: escapes next character if the character is a syntax character.\n", s->general_clr, s->important_clr, s->general_clr,
 s->important_clr,
 s->directory_clr, s->argument_clr, s->default_clr,
 s->important_clr, s->default_clr,
@@ -207,8 +207,9 @@ int run(char** args, int one_time, volatile int* in_command, char* home_dir, cha
 		/* if there was an error, print it */
 		if(succ < 0){
 			char* message = malloc(100);
-			sprintf(message, "\033[92msimpleshell:\033[0m \033[94m%s\033[0m", args[0]);
+			sprintf(message, "%ssimpleshell: %s%s", s->error_prompt_clr, args[0], s->error_clr);
 			perror(message);
+			printf("%s", s->default_clr);
 			fflush(stdout);
 			fflush(stderr);
 			free(message);

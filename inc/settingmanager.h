@@ -15,6 +15,8 @@ typedef struct{
 	char* important_clr;
 	char* default_clr;
 	char* argument_clr;
+	char* error_clr;
+	char* error_prompt_clr;
 	
 } settings;
 
